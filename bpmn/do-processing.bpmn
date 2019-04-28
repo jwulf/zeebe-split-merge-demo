@@ -13,6 +13,9 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1e7ree4" sourceRef="StartEvent_1" targetRef="ServiceTask_1a9xigy" />
     <bpmn:serviceTask id="ServiceTask_0rjb6be" name="Send result back via message">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="message-result" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_17qr41t</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1b5ntox</bpmn:outgoing>
     </bpmn:serviceTask>
