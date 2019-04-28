@@ -4,7 +4,7 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1dxs22c</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:serviceTask id="ServiceTask_18h7467" name="split-inputs">
+    <bpmn:serviceTask id="ServiceTask_18h7467" name="Split Inputs (Configure workflows)">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="split-inputs" />
       </bpmn:extensionElements>
@@ -13,7 +13,7 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1dxs22c" sourceRef="StartEvent_1" targetRef="ServiceTask_18h7467" />
     <bpmn:sequenceFlow id="SequenceFlow_0nqarsf" sourceRef="ServiceTask_18h7467" targetRef="ServiceTask_0pu351t" />
-    <bpmn:serviceTask id="ServiceTask_0pu351t" name="start-processing">
+    <bpmn:serviceTask id="ServiceTask_0pu351t" name="Start Processing Workflow instances">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="start-processing" />
       </bpmn:extensionElements>
@@ -26,7 +26,7 @@
       <bpmn:outgoing>SequenceFlow_0u6bum2</bpmn:outgoing>
       <bpmn:messageEventDefinition />
     </bpmn:intermediateCatchEvent>
-    <bpmn:serviceTask id="ServiceTask_1j7qytq" name="collect-result">
+    <bpmn:serviceTask id="ServiceTask_1j7qytq" name="Aggregate Result">
       <bpmn:incoming>SequenceFlow_0u6bum2</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01uydbn</bpmn:outgoing>
     </bpmn:serviceTask>
