@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_0w0dac0" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Zeebe Modeler" exporterVersion="0.5.0">
+  <bpmn:process id="Split-Join-1" name="Split Join 1" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>SequenceFlow_0lhp6to</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="ExclusiveGateway_1uj6x74">
+      <bpmn:incoming>SequenceFlow_0lhp6to</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0rgtzhw</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_15dl0df</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:serviceTask id="SetThresholdTo1000" name="Set Threshold to 1000">
+      <bpmn:extensionElements>
+        <zeebe:taskHeaders>
+          <zeebe:header key="threshold" value="1000" />
+        </zeebe:taskHeaders>
+        <zeebe:taskDefinition type="config-to-payload" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_15dl0df</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1vx0phb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="SetThresholdTo2000" name="Set Threshold to 2000">
+      <bpmn:extensionElements>
+        <zeebe:taskHeaders>
+          <zeebe:header key="threshold" value="2000" />
+        </zeebe:taskHeaders>
+        <zeebe:taskDefinition type="config-to-payload" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0rgtzhw</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1b45afj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0rgtzhw" sourceRef="ExclusiveGateway_1uj6x74" targetRef="SetThresholdTo2000" />
+    <bpmn:sequenceFlow id="SequenceFlow_15dl0df" sourceRef="ExclusiveGateway_1uj6x74" targetRef="SetThresholdTo1000" />
+    <bpmn:serviceTask id="ProcessFile1" name="ProcessFile1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="config-to-payload" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="file" value="file1" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1vx0phb</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1wdubrn</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1vx0phb" sourceRef="SetThresholdTo1000" targetRef="ProcessFile1" />
+    <bpmn:serviceTask id="ProcessFile2" name="ProcessFile2">
+      <bpmn:extensionElements>
+        <zeebe:taskHeaders>
+          <zeebe:header key="file" value="file2" />
+        </zeebe:taskHeaders>
+        <zeebe:taskDefinition type="config-to-payload" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1b45afj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0tsu80x</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1b45afj" sourceRef="SetThresholdTo2000" targetRef="ProcessFile2" />
+    <bpmn:serviceTask id="Result1" name="Result1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="output" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1wdubrn</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_024f1t0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Result2" name="Result2">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="output" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0tsu80x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_08o6w4l</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1wdubrn" sourceRef="ProcessFile1" targetRef="Result1" />
+    <bpmn:sequenceFlow id="SequenceFlow_0tsu80x" sourceRef="ProcessFile2" targetRef="Result2" />
+    <bpmn:parallelGateway id="ExclusiveGateway_0iysg35">
+      <bpmn:incoming>SequenceFlow_024f1t0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_08o6w4l</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0payb3j</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_024f1t0" sourceRef="Result1" targetRef="ExclusiveGateway_0iysg35" />
+    <bpmn:sequenceFlow id="SequenceFlow_08o6w4l" sourceRef="Result2" targetRef="ExclusiveGateway_0iysg35" />
+    <bpmn:serviceTask id="FinalResults" name="Final Results">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="output" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0payb3j</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1af1r4b</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0payb3j" sourceRef="ExclusiveGateway_0iysg35" targetRef="FinalResults" />
+    <bpmn:endEvent id="EndEvent_1iulv3y" name="End">
+      <bpmn:incoming>SequenceFlow_1af1r4b</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1af1r4b" sourceRef="FinalResults" targetRef="EndEvent_1iulv3y" />
+    <bpmn:sequenceFlow id="SequenceFlow_0lhp6to" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_1uj6x74" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Split-Join-1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="301" y="104" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="307" y="74" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ParallelGateway_0a6ug3y_di" bpmnElement="ExclusiveGateway_1uj6x74">
+        <dc:Bounds x="294" y="179" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0ea5ech_di" bpmnElement="SetThresholdTo1000">
+        <dc:Bounds x="189" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_01qxwku_di" bpmnElement="SetThresholdTo2000">
+        <dc:Bounds x="358" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0rgtzhw_di" bpmnElement="SequenceFlow_0rgtzhw">
+        <di:waypoint x="344" y="204" />
+        <di:waypoint x="408" y="204" />
+        <di:waypoint x="408" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_15dl0df_di" bpmnElement="SequenceFlow_15dl0df">
+        <di:waypoint x="294" y="204" />
+        <di:waypoint x="239" y="204" />
+        <di:waypoint x="239" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0q0jrz0_di" bpmnElement="ProcessFile1">
+        <dc:Bounds x="189" y="371" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1vx0phb_di" bpmnElement="SequenceFlow_1vx0phb">
+        <di:waypoint x="239" y="340" />
+        <di:waypoint x="239" y="371" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0ecmic4_di" bpmnElement="ProcessFile2">
+        <dc:Bounds x="358" y="371" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1b45afj_di" bpmnElement="SequenceFlow_1b45afj">
+        <di:waypoint x="408" y="340" />
+        <di:waypoint x="408" y="371" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1b3gxu2_di" bpmnElement="Result1">
+        <dc:Bounds x="189" y="475" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1vuexl7_di" bpmnElement="Result2">
+        <dc:Bounds x="358" y="475" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1wdubrn_di" bpmnElement="SequenceFlow_1wdubrn">
+        <di:waypoint x="239" y="451" />
+        <di:waypoint x="239" y="475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0tsu80x_di" bpmnElement="SequenceFlow_0tsu80x">
+        <di:waypoint x="408" y="451" />
+        <di:waypoint x="408" y="475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ParallelGateway_03apf1o_di" bpmnElement="ExclusiveGateway_0iysg35">
+        <dc:Bounds x="294" y="600" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_024f1t0_di" bpmnElement="SequenceFlow_024f1t0">
+        <di:waypoint x="239" y="555" />
+        <di:waypoint x="239" y="625" />
+        <di:waypoint x="294" y="625" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_08o6w4l_di" bpmnElement="SequenceFlow_08o6w4l">
+        <di:waypoint x="408" y="555" />
+        <di:waypoint x="408" y="625" />
+        <di:waypoint x="344" y="625" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_06um7ko_di" bpmnElement="FinalResults">
+        <dc:Bounds x="269" y="683" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0payb3j_di" bpmnElement="SequenceFlow_0payb3j">
+        <di:waypoint x="319" y="650" />
+        <di:waypoint x="319" y="683" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1iulv3y_di" bpmnElement="EndEvent_1iulv3y">
+        <dc:Bounds x="301" y="808" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="309" y="851" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1af1r4b_di" bpmnElement="SequenceFlow_1af1r4b">
+        <di:waypoint x="319" y="763" />
+        <di:waypoint x="319" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0lhp6to_di" bpmnElement="SequenceFlow_0lhp6to">
+        <di:waypoint x="319" y="140" />
+        <di:waypoint x="319" y="179" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
