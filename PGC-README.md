@@ -54,3 +54,5 @@ A master workflow starts a new workflow for each file processing task, passing i
 Communication from the file processing workflow back to the master workflow is via message. When a file has been processed, it messages the result back to the master workflow, which aggregates the results.
 
 This is illustrated in `bpmn/split-inputs.bpmn` (the master workflow) and `bpmn/do-processing.bpmn` (the file processing workflow).
+
+This way, each file processing workflow can be started with its own configuration, and no opportunity to interact with other workflows.
