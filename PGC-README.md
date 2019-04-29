@@ -49,10 +49,16 @@ However, the file names does not get merged but replaced.
 
 Another approach is to break out the file processing to its own workflow, with its own context.
 
-A master workflow starts a new workflow for each file processing task, passing in the appropriate configuration.
+A master workflow starts a new workflow for each file processing task, passing in the appropriate configuration (map).
 
-Communication from the file processing workflow back to the master workflow is via message. When a file has been processed, it messages the result back to the master workflow, which aggregates the results.
+Communication from the file processing workflow back to the master workflow is via message. When a file has been processed, it messages the result back to the master workflow, which aggregates the results (reduce).
 
 This is illustrated in `bpmn/split-inputs.bpmn` (the master workflow) and `bpmn/do-processing.bpmn` (the file processing workflow).
 
 This way, each file processing workflow can be started with its own configuration, and no opportunity to interact with other workflows.
+
+To run:
+
+```
+ts-node map-reduce.ts
+```
