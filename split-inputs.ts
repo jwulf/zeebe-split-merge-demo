@@ -18,8 +18,6 @@ enum MessageName {
   FILE_PROCESSED = "file-processed"
 }
 
-// @TODO Complete implementation
-
 /*
 // Helper to generate TypeScript types from BPMN
 (async () => {
