@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/jwulf/zeebe-split-merge-demo#readme",
   "dependencies": {
+    "@types/uuid": "^3.4.4",
+    "uuid": "^3.3.2",
     "zeebe-node-0.17a": "^2.0.0"
   }
 }
