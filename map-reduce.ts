@@ -32,7 +32,6 @@ enum MessageName {
 
 test("./bpmn/split-inputs.bpmn", ["./bpmn/do-processing.bpmn"]);
 
-let processingWorkflowId: string;
 export async function test(
   bpmnFileToStart: string,
   dependencies: string[] = []
@@ -44,7 +43,7 @@ export async function test(
   ];
   const processId = await deployWorkflow(bpmnFileToStart);
   // Allows for multiple dependencies, but we have just one in this case
-  processingWorkflowId = (await Promise.all(
+  const processingWorkflowId = (await Promise.all(
     dependencies.map(d => deployWorkflow(d))
   ))[0];
   if (createWorkers()) {
@@ -53,6 +52,7 @@ export async function test(
     await zbc.createWorkflowInstance(processId, {
       processKey,
       files,
+      mapFunction: processingWorkflowId,
       results: [],
       totalToDo: files.length
     });
@@ -76,11 +76,11 @@ function createWorkers() {
       "split-inputs-worker",
       TaskType.SPLIT_INPUTS,
       async (job, complete) => {
-        const { files, processKey } = job.variables;
+        const { files, processKey, mapFunction } = job.variables;
 
         await Promise.all(
           files.map(f =>
-            zbc.createWorkflowInstance(processingWorkflowId, {
+            zbc.createWorkflowInstance(mapFunction, {
               processKey,
               file: f
             })
