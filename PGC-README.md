@@ -45,7 +45,7 @@ Each task can process a different file and each task returns a file name.
 I created in each subprocess an output mapping to add the file to a "files" variable.
 However, the file names does not get merged but replaced.
 
-## Another approach: messaging from a distinct processing workflow
+## Another approach: Map/Reduce by messages
 
 Another approach is to break out the file processing to its own workflow, with its own context.
 
